@@ -1,0 +1,13 @@
+# Nhật Ký Tương Tác AI (AI Prompt Log)
+
+## Prompt 1: Tìm hiểu về kiểu dữ liệu lưu trữ tài chính trong MySQL
+* **User Prompt:** "Trong MySQL, để lưu trữ các khoản tiền cọc và phí phạt tài chính, tôi nên chọn DECIMAL, FLOAT hay DOUBLE? Hãy giải thích sự khác biệt."
+* **AI Response Summary:** Nên dùng `DECIMAL(precision, scale)` vì nó lưu trữ số thực dưới dạng chính xác tuyệt đối (fixed-point). Trong khi đó `FLOAT` và `DOUBLE` dùng biểu diễn dấu phẩy động (floating-point) dễ dẫn đến sai số làm tròn khi thực hiện các phép toán trừ tiền cọc.
+
+## Prompt 2: Lựa chọn mô hình quan hệ cho bảng Kiểm tra xe (Inspections)
+* **User Prompt:** "Tôi nên gộp trực tiếp thông tin kiểm tra xe vào bảng Rentals hay tách ra bảng Inspections riêng? Quan hệ giữa Rentals và Inspections nên là 1-1 hay 1-N?"
+* **AI Response Summary:** Nên tách thành bảng `Inspections` riêng để tuân thủ Dạng chuẩn 3NF. Việc tách bảng giúp quản lý dữ liệu kiểm tra linh hoạt hơn (mỗi lần giao/trả xe hoặc phát sinh sự cố đều có thể lưu vết độc lập) mà không làm phình to bảng `Rentals`.
+
+## Prompt 3: Đảm bảo toàn vẹn dữ liệu với ràng buộc Foreign Key
+* **User Prompt:** "Ý nghĩa của option ON DELETE RESTRICT khi tạo khóa ngoại từ bảng Inspections tới Rentals là gì?"
+* **AI Response Summary:** `ON DELETE RESTRICT` ngăn chặn việc xóa một bản ghi trong bảng `Rentals` nếu bản ghi đó đã có dữ liệu biên bản kiểm tra liên kết bên bảng `Inspections`, giúp tránh mất mát dữ liệu đối soát quan trọng.
