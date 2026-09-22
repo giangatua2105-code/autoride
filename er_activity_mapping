@@ -1,0 +1,15 @@
+# Phân Tích Sự Bất Nhất Giữa UML Activity Diagram Và ERD Legacy
+
+## 1. Bảng so sánh "Khoảng trống dữ liệu" (Data Gaps)
+
+| Luồng nghiệp vụ (UML) | CSDL Legacy cũ | Hậu quả vận hành | CSDL mới (Optimized) |
+| :--- | :--- | :--- | :--- |
+| **Vòng đời hợp đồng** | `VARCHAR(50)` không kiểm soát | Nhập sai chính tả (e.g., 'Booked', 'active') làm hỏng logic hệ thống | Kiểu `ENUM('BOOKED', 'ACTIVE', 'COMPLETED', 'CANCELLED')` |
+| **Tính phí trễ & đền bù** | Không có cột tài chính | Nhân viên hoàn lại 100% cọc dù xe bị hư hỏng, làm thất thoát lợi nhuận | Bổ sung `security_deposit`, `late_fee`, `damage_fee` kiểu `DECIMAL` |
+| **Kiểm tra tình trạng xe** | Không có nơi lưu vết | Không có căn cứ pháp lý để yêu cầu khách bồi thường | Bảng `Inspections` lưu lịch sử và chi tiết hư hỏng |
+
+## 2. Giải trình bắt buộc về cột `damage_fee`
+Trường `damage_fee` là bắt buộc phải có để đảm bảo **tính toàn vẹn hệ thống và đối soát tài chính**. Nhánh rẽ nghiệp vụ trả xe yêu cầu tính số tiền hoàn trả:
+$$\text{Refund} = \text{Deposit} - \text{Late Fee} - \text{Damage Fee}$$
+
+Nếu thiếu `damage_fee`, dữ liệu tài chính bị đứt gãy. Doanh nghiệp phải dùng sổ sách thủ công, dẫn đến tình trạng "bốc hơi" lợi nhuận do không có cơ chế tự động hóa việc trừ tiền cọc tương ứng với mức độ hư hại thực tế của xe.
